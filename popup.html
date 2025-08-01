@@ -6,10 +6,17 @@
 </head>
 <body>
   <h1>Screenshot Analyzer</h1>
-  <button id="analyzeButton">Take Screenshot and Analyze</button>
-  <div id="loadingIndicator" class="hidden">Loading...</div>
+  <button id="analyzeButton"><span id="analyzeButtonText">Take Screenshot and Analyze</span> <div id="analyzeButtonSpinner" class="spinner hidden"></div></button>
   <img id="screenshotPreview" class="hidden">
   <div id="result"></div>
+
+  <div id="promptContainer" class="hidden">
+    <h2>Modify Prompt</h2>
+    <textarea id="promptText" rows="5" cols="50"></textarea>
+    <div id="promptError" class="error"></div>
+    <button id="submitPromptButton">Submit</button>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>
