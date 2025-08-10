@@ -28,7 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const OPENROUTER_API_KEY = data.openRouterApiKey;
 
       if (!OPENROUTER_API_KEY) {
-        resultDiv.textContent = 'Error: OpenRouter API Key not set. Please go to extension options to set it.';
+        resultDiv.innerHTML = 'Error: OpenRouter API Key not set. Please go to <a href="#" id="optionsLink">extension options</a> to set it.';
+        document.getElementById('optionsLink').addEventListener('click', (e) => {
+          e.preventDefault();
+          chrome.runtime.openOptionsPage();
+        });
         return;
       }
 
