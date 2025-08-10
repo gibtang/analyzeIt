@@ -37,7 +37,7 @@ The "Screenshot Analyzer" extension should now appear in your list of extensions
 ## Configuration
 
 ### OpenRouter API Key
-This extension requires an API key from OpenRouter to function. You can obtain one from their website. The key is stored locally using Chrome's `chrome.storage.sync` API, ensuring it's synchronized across your Chrome profiles.
+This extension requires an API key from OpenRouter to function. You can obtain one from their [website](http://openrouter.ai/). The key is stored locally using Chrome's `chrome.storage.sync` API, ensuring it's synchronized across your Chrome profiles.
 
 ## File Structure
 
