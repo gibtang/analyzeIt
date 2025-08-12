@@ -7,6 +7,10 @@
 <body>
   <h1>Screenshot Analyzer</h1>
   <button id="analyzeButton"><span id="analyzeButtonText">Take Screenshot and Analyze</span> <div id="analyzeButtonSpinner" class="spinner hidden"></div></button>
+  <div id="copyButtonContainer" style="text-align: center; margin-top: 10px;">
+    <span id="copyButton" style="cursor: pointer; color: blue; text-decoration: underline;">Copy</span>
+  </div>
+  <div id="copySuccessMessage" style="color: green; font-weight: bold; margin-top: 5px; text-align: center;" class="hidden">Copied to clipboard!</div>
   <img id="screenshotPreview" class="hidden">
   <div id="result"></div>
 
