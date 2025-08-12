@@ -9,10 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitPromptButton = document.getElementById('submitPromptButton');
   const promptError = document.getElementById('promptError');
 
-  const OPENROUTER_MODEL = 'google/gemini-flash-1.5';
   let currentScreenshotDataUrl = ''; // To store the screenshot data for re-use
 
-  async function callOpenRouter(prompt, dataUrl) {
+  async function callAnalyzeApi(prompt, dataUrl) {
     resultDiv.textContent = '';
     promptError.textContent = ''; // Clear any previous errors
     promptText.disabled = true; // Disable prompt text area
@@ -24,42 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
     analyzeButtonSpinner.classList.remove('hidden');
 
     try {
-      const data = await chrome.storage.sync.get('openRouterApiKey');
-      const OPENROUTER_API_KEY = data.openRouterApiKey;
-
-      if (!OPENROUTER_API_KEY) {
-        resultDiv.innerHTML = 'Error: OpenRouter API Key not set. Please go to <a href="#" id="optionsLink">extension options</a> to set it.';
-        document.getElementById('optionsLink').addEventListener('click', (e) => {
-          e.preventDefault();
-          chrome.runtime.openOptionsPage();
-        });
-        return;
-      }
-
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const response = await fetch(config.API_URL, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          model: OPENROUTER_MODEL,
-          messages: [
-            {
-              role: 'user',
-              content: [
-                { type: 'text', text: prompt },
-                { type: 'image_url', image_url: { url: dataUrl } }
-              ]
-            }
-          ]
-        })
+        body: JSON.stringify({ prompt, dataUrl })
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('API Error Details:', errorData);
-        throw new Error(`API request failed with status ${response.status}.`);
+        console.error('Analyze API Error Details:', errorData);
+        if (response.status === 500 && errorData.error.includes('API Key not set')) {
+          resultDiv.innerHTML = 'Error: OpenRouter API Key not set on the server. Please contact the administrator.';
+        } else {
+          throw new Error(`Analyze API request failed with status ${response.status}: ${errorData.error}`);
+        }
+        return;
       }
 
       const responseData = await response.json();
@@ -82,6 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Remove the API key check from here, as it's now handled by the backend
+  // The options link is also no longer relevant for the extension itself
+  // as the API key is now set on the server.
+  // The original error message and options link logic is removed.
+  // The API key is now a server-side concern.
+
   analyzeButton.addEventListener('click', async () => {
     screenshotPreview.classList.add('hidden');
     promptContainer.classList.add('hidden'); // Hide prompt container initially
@@ -95,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const initialPrompt = 'Analyze this screenshot and provide a detailed description.';
       promptText.value = initialPrompt; // Set initial prompt in textarea
 
-      await callOpenRouter(initialPrompt, currentScreenshotDataUrl);
+      await callAnalyzeApi(initialPrompt, currentScreenshotDataUrl);
       promptContainer.classList.remove('hidden'); // Show prompt container after initial analysis
 
     } catch (error) {
@@ -113,9 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
     promptError.textContent = ''; // Clear error if valid
 
     if (currentScreenshotDataUrl) {
-      await callOpenRouter(newPrompt, currentScreenshotDataUrl);
+      await callAnalyzeApi(newPrompt, currentScreenshotDataUrl);
     } else {
       resultDiv.textContent = 'No screenshot available to analyze. Please take a screenshot first.';
     }
   });
 });
+

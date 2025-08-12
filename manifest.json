@@ -1,6 +1,6 @@
 {
-  "name": "Screenshot Analyzer",
-  "version": "1.0",
+  "name": "Analyse It Screenshot Analyzer",
+  "version": "1.1",
   "description": "Analyzes screenshots of the active tab using AI. You need your own OpenRouter API key for this",
   "manifest_version": 3,
   "permissions": ["activeTab", "storage"],
