@@ -59,3 +59,36 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+
+/* Tooltip styles for copy button */
+#copyButton {
+  position: relative;
+}
+
+#copyButton:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-bottom: 5px;
+}
+
+#copyButton:hover::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: #333;
+  margin-bottom: 1px;
+  z-index: 1000;
+}

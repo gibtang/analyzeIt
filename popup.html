@@ -8,7 +8,11 @@
   <h1>Screenshot Analyzer</h1>
   <button id="analyzeButton"><span id="analyzeButtonText">Take Screenshot and Analyze</span> <div id="analyzeButtonSpinner" class="spinner hidden"></div></button>
   <div id="copyButtonContainer" style="text-align: center; margin-top: 10px;">
-    <span id="copyButton" style="cursor: pointer; color: blue; text-decoration: underline;">Copy</span>
+    <span id="copyButton" style="cursor: pointer; display: inline-block; width: 24px; height: 24px; position: relative;" title="Copy Screenshot">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+      </svg>
+    </span>
   </div>
   <div id="copySuccessMessage" style="color: green; font-weight: bold; margin-top: 5px; text-align: center;" class="hidden">Copied to clipboard!</div>
   <img id="screenshotPreview" class="hidden">
