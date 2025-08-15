@@ -7,10 +7,17 @@
 <body>
   <h1>Screenshot Analyzer</h1>
   <button id="analyzeButton"><span id="analyzeButtonText">Take Screenshot and Analyze</span> <div id="analyzeButtonSpinner" class="spinner hidden"></div></button>
-  <div id="copyButtonContainer" style="text-align: center; margin-top: 10px;">
-    <span id="copyButton" style="cursor: pointer; display: inline-block; width: 24px; height: 24px; position: relative;" title="Copy Screenshot">
+  <div id="buttonContainer" style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+    <div id="copyButtonContainer" style="text-align: center;">
+      <span id="copyButton" style="cursor: pointer; display: inline-block; width: 24px; height: 24px; position: relative;" title="Copy Screenshot">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+          <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+        </svg>
+      </span>
+    </div>
+    <span id="clearButton" style="cursor: pointer; display: inline-block; width: 24px; height: 24px; position: relative;" title="Clear Screenshot">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
       </svg>
     </span>
   </div>

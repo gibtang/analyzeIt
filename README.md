@@ -1,49 +1,56 @@
-# Screenshot Analyzer Chrome Extension
+Based on my analysis of the Chrome extension files, here's what this extension does:
 
-## Description
-The Screenshot Analyzer is a Chrome extension that allows users to capture a screenshot of their active browser tab and send it to the OpenRouter API for detailed analysis. It provides a quick way to get AI-powered insights directly from any webpage.
+## **Analyse It Screenshot Analyzer - Chrome Extension Overview**
 
-## Features
-*   **Capture Screenshots:** Easily take a screenshot of the current tab.
-*   **AI-Powered Analysis:** Utilizes the OpenRouter API (specifically `google/gemini-flash-1.5`) to analyze captured screenshots.
-*   **Customizable Prompts:** Users can modify the prompt sent to the AI for tailored analysis.
-*   **API Key Management:** Securely store your OpenRouter API key in the extension's options.
-*   **User-Friendly Interface:** Simple popup interface with clear instructions and feedback.
+This Chrome extension is an **AI-powered screenshot analysis tool** that captures screenshots of web pages and provides intelligent analysis using Google's Gemini AI model through the OpenRouter API.
 
-## Installation (Local Development)
+### **Core Functionality**
 
-To install and run this Chrome extension locally for development or testing:
+1. **Screenshot Capture**: Takes screenshots of the currently active browser tab
+2. **AI Analysis**: Sends captured screenshots to an AI service for detailed analysis
+3. **Custom Prompts**: Allows users to customize the analysis prompt for specific insights
+4. **Clipboard Integration**: Enables copying screenshots directly to clipboard
 
-1.  **Clone or Download:** Obtain the project files (e.g., by cloning the Git repository or downloading the ZIP).
-2.  **Open Google Chrome.**
-3.  **Navigate to Extensions:** Type `chrome://extensions` in the address bar and press Enter.
-4.  **Enable Developer Mode:** In the top-right corner of the Extensions page, toggle the "Developer mode" switch to the ON position.
-5.  **Load Unpacked Extension:** Click the "Load unpacked" button that appears in the top-left corner.
-6.  **Select Extension Directory:** A file selection dialog will appear. Navigate to the root directory of this project (the folder containing `manifest.json`) and click the "Select" or "Open" button.
+### **How It Works**
 
-The "Screenshot Analyzer" extension should now appear in your list of extensions.
+```mermaid
+graph TD
+    A[User clicks extension icon] --> B[Extension popup opens]
+    B --> C[User clicks "Take Screenshot and Analyze"]
+    C --> D[Capture visible tab screenshot]
+    D --> E[Display screenshot preview]
+    E --> F[Send to AI API for analysis]
+    F --> G[Display analysis results]
+    G --> H[User can modify prompt and re-analyze]
+```
 
-## Usage
+### **Technical Architecture**
 
-1.  **Set API Key:** Before using the extension, you must set your OpenRouter API Key.
-    *   Right-click the "Screenshot Analyzer" extension icon in your Chrome toolbar.
-    *   Select "Options" from the context menu.
-    *   Enter your OpenRouter API Key in the provided field and click "Save".
-2.  **Open Extension Popup:** Click the "Screenshot Analyzer" extension icon in your Chrome toolbar.
-3.  **Take Screenshot and Analyze:** Click the "Take Screenshot and Analyze" button. The extension will capture the visible part of your current tab, display it, and send it for analysis.
-4.  **View Analysis:** The analysis results from the AI will be displayed in the popup.
-5.  **Modify Prompt (Optional):** After the initial analysis, a text area will appear. You can modify the prompt here and click "Submit" to get a new analysis based on the same screenshot.
+- **Frontend**: Chrome extension popup interface ([`popup.html`](browser_extension/popup.html), [`popup.js`](browser_extension/popup.js), [`popup.css`](browser_extension/popup.css))
+- **Backend API**: Next.js API route ([`route.ts`](frontend/src/app/api/analyze/route.ts)) that handles AI processing
+- **AI Service**: OpenRouter API with Google Gemini 2.5 Flash Lite model
+- **Configuration**: API endpoint configured at `https://www.analyse-it.dev/api/analyze`
 
-## Configuration
+### **Key Features**
 
-### OpenRouter API Key
-This extension requires an API key from OpenRouter to function. You can obtain one from their [website](http://openrouter.ai/). The key is stored locally using Chrome's `chrome.storage.sync` API, ensuring it's synchronized across your Chrome profiles.
+1. **No API Key Required for Users**: The API key is managed server-side, making it easier for end users
+2. **Interactive Analysis**: After initial analysis, users can modify their prompt to get different insights from the same screenshot
+3. **Visual Feedback**: Shows a preview of the captured screenshot
+4. **Error Handling**: Comprehensive error handling for API failures and network issues
+5. **Cross-Origin Support**: CORS-enabled API for extension communication
 
-## File Structure
+### **User Flow**
 
-*   `manifest.json`: The manifest file for the Chrome extension, defining its name, version, permissions, and entry points.
-*   `popup.html`: The HTML structure for the extension's popup interface.
-*   `popup.css`: The CSS styles for the popup interface.
-*   `popup.js`: The main JavaScript logic for the popup, handling screenshot capture, API calls, and UI interactions.
-*   `options.html`: The HTML structure for the extension's options page.
-*   `options.js`: The JavaScript logic for the options page, handling the saving and loading of the OpenRouter API key.
+1. Click the extension icon in Chrome toolbar
+2. Click "Take Screenshot and Analyze" button
+3. Extension captures the current tab's visible area
+4. Screenshot is sent to the AI service for analysis
+5. Results appear in the popup with the screenshot preview
+6. Users can edit the prompt and submit again for different analysis
+
+### **Permissions Required**
+
+- `activeTab`: To capture screenshots of the current tab
+- `storage`: To store user preferences (though API key storage appears to be server-side now)
+
+The extension essentially provides a seamless way to get AI-powered insights about any web content you're viewing, without needing to manually save screenshots or manage API credentials.

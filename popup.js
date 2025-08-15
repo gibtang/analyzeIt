@@ -1,17 +1,47 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const analyzeButton = document.getElementById('analyzeButton');
-  const analyzeButtonText = document.getElementById('analyzeButtonText');
-  const analyzeButtonSpinner = document.getElementById('analyzeButtonSpinner');
-  const screenshotPreview = document.getElementById('screenshotPreview');
-  const resultDiv = document.getElementById('result');
-  const promptContainer = document.getElementById('promptContainer');
-  const promptText = document.getElementById('promptText');
-  const submitPromptButton = document.getElementById('submitPromptButton');
-  const promptError = document.getElementById('promptError');
-  const copyButton = document.getElementById('copyButton'); // Get the copy button
-  const copySuccessMessage = document.getElementById('copySuccessMessage'); // Get the success message element
+const analyzeButton = document.getElementById('analyzeButton');
+const analyzeButtonText = document.getElementById('analyzeButtonText');
+const analyzeButtonSpinner = document.getElementById('analyzeButtonSpinner');
+const screenshotPreview = document.getElementById('screenshotPreview');
+const resultDiv = document.getElementById('result');
+const promptContainer = document.getElementById('promptContainer');
+const promptText = document.getElementById('promptText');
+const submitPromptButton = document.getElementById('submitPromptButton');
+const promptError = document.getElementById('promptError');
+const copyButton = document.getElementById('copyButton'); // Get the copy button
+const copySuccessMessage = document.getElementById('copySuccessMessage'); // Get the success message element
+const clearButton = document.getElementById('clearButton'); // Get the clear button
 
-  let currentScreenshotDataUrl = ''; // To store the screenshot data for re-use
+let currentScreenshotDataUrl = ''; // To store the screenshot data for re-use
+
+// Function to save state to Chrome storage
+function saveState() {
+  const state = {
+    screenshotDataUrl: currentScreenshotDataUrl,
+    analysisResult: resultDiv.textContent,
+    promptText: promptText.value,
+    hasScreenshot: !!currentScreenshotDataUrl
+  };
+  chrome.storage.local.set({ popupState: state });
+}
+
+// Function to restore state from Chrome storage
+function restoreState() {
+  chrome.storage.local.get(['popupState'], (result) => {
+    const state = result.popupState;
+    if (state && state.hasScreenshot) {
+      currentScreenshotDataUrl = state.screenshotDataUrl;
+      screenshotPreview.src = state.screenshotDataUrl;
+      screenshotPreview.classList.remove('hidden');
+      resultDiv.textContent = state.analysisResult || '';
+      promptText.value = state.promptText || 'Analyze this screenshot and provide a detailed description.';
+      promptContainer.classList.remove('hidden');
+    }
+  });
+}
+
+// Restore state when popup opens
+restoreState();
 
   async function callAnalyzeApi(prompt, dataUrl) {
     resultDiv.textContent = '';
@@ -50,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         resultDiv.textContent = 'No analysis content received from the API.';
       }
+      saveState(); // Save state after successful analysis
     } catch (error) {
       console.error('Error:', error);
       resultDiv.textContent = `An error occurred: ${error.message}. Please check the console for more details.`;
@@ -85,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       await callAnalyzeApi(initialPrompt, currentScreenshotDataUrl);
       promptContainer.classList.remove('hidden'); // Show prompt container after initial analysis
+      saveState(); // Save state after taking new screenshot
 
     } catch (error) {
       console.error('Error:', error);
@@ -99,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     promptError.textContent = ''; // Clear error if valid
+    saveState(); // Save prompt text changes
 
     if (currentScreenshotDataUrl) {
       await callAnalyzeApi(newPrompt, currentScreenshotDataUrl);
@@ -146,5 +179,30 @@ document.addEventListener('DOMContentLoaded', () => {
         copySuccessMessage.classList.add('hidden');
       }, 3000);
     }
+  });
+
+  // Add event listener for the clear button
+  clearButton.addEventListener('click', () => {
+    // Clear the screenshot preview
+    screenshotPreview.classList.add('hidden');
+    screenshotPreview.src = '';
+    
+    // Clear the result text
+    resultDiv.textContent = '';
+    
+    // Hide the prompt container
+    promptContainer.classList.add('hidden');
+    
+    // Clear the stored screenshot data
+    currentScreenshotDataUrl = '';
+    
+    // Clear the prompt text
+    promptText.value = '';
+    
+    // Clear any error messages
+    promptError.textContent = '';
+    
+    // Clear stored state from Chrome storage
+    chrome.storage.local.remove('popupState');
   });
 });

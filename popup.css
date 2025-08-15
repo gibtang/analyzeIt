@@ -60,12 +60,12 @@ button:hover {
   }
 }
 
-/* Tooltip styles for copy button */
-#copyButton {
+/* Tooltip styles for copy and clear buttons */
+#copyButton, #clearButton {
   position: relative;
 }
 
-#copyButton:hover::after {
+#copyButton:hover::after, #clearButton:hover::after {
   content: attr(title);
   position: absolute;
   bottom: 100%;
@@ -81,7 +81,7 @@ button:hover {
   margin-bottom: 5px;
 }
 
-#copyButton:hover::before {
+#copyButton:hover::before, #clearButton:hover::before {
   content: '';
   position: absolute;
   bottom: 100%;
