@@ -102,6 +102,11 @@ restoreState();
   // The API key is now a server-side concern.
 
   analyzeButton.addEventListener('click', async () => {
+    // Track screenshot and analyze button click
+    if (window.Analytics) {
+      window.Analytics.trackEvent('screenshot_analyze_click');
+    }
+
     screenshotPreview.classList.add('hidden');
     promptContainer.classList.add('hidden'); // Hide prompt container initially
     resultDiv.textContent = '';
@@ -121,6 +126,13 @@ restoreState();
     } catch (error) {
       console.error('Error:', error);
       resultDiv.textContent = `An error occurred: ${error.message}. Please check the console for more details.`;
+      
+      // Track screenshot error
+      if (window.Analytics) {
+        window.Analytics.trackEvent('screenshot_error', {
+          error_message: error.message
+        });
+      }
     }
   });
 
@@ -133,6 +145,13 @@ restoreState();
     promptError.textContent = ''; // Clear error if valid
     saveState(); // Save prompt text changes
 
+    // Track prompt submission
+    if (window.Analytics) {
+      window.Analytics.trackEvent('prompt_submit', {
+        prompt_length: newPrompt.length
+      });
+    }
+
     if (currentScreenshotDataUrl) {
       await callAnalyzeApi(newPrompt, currentScreenshotDataUrl);
     } else {
@@ -142,6 +161,11 @@ restoreState();
 
   // Add event listener for the copy button
   copyButton.addEventListener('click', async () => {
+    // Track copy screenshot attempt
+    if (window.Analytics) {
+      window.Analytics.trackEvent('copy_screenshot_click');
+    }
+
     if (!currentScreenshotDataUrl) {
       copySuccessMessage.textContent = 'No screenshot to copy.';
       copySuccessMessage.style.color = 'red';
@@ -160,6 +184,11 @@ restoreState();
       // Use the Clipboard API to write the blob
       await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
 
+      // Track successful copy
+      if (window.Analytics) {
+        window.Analytics.trackEvent('copy_screenshot_success');
+      }
+
       // Show success message
       copySuccessMessage.textContent = 'Copied to clipboard!';
       copySuccessMessage.style.color = 'green';
@@ -172,6 +201,14 @@ restoreState();
 
     } catch (error) {
       console.error('Error copying screenshot:', error);
+      
+      // Track copy error
+      if (window.Analytics) {
+        window.Analytics.trackEvent('copy_screenshot_error', {
+          error_message: error.message
+        });
+      }
+
       copySuccessMessage.textContent = 'Failed to copy.';
       copySuccessMessage.style.color = 'red';
       copySuccessMessage.classList.remove('hidden');
@@ -183,6 +220,11 @@ restoreState();
 
   // Add event listener for the clear button
   clearButton.addEventListener('click', () => {
+    // Track clear button click
+    if (window.Analytics) {
+      window.Analytics.trackEvent('clear_screenshot_click');
+    }
+
     // Clear the screenshot preview
     screenshotPreview.classList.add('hidden');
     screenshotPreview.src = '';

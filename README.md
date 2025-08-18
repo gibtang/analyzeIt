@@ -1,56 +1,42 @@
-Based on my analysis of the Chrome extension files, here's what this extension does:
+# Screenshot Analyzer Chrome Extension
 
-## **Analyse It Screenshot Analyzer - Chrome Extension Overview**
+## Google Analytics Integration
 
-This Chrome extension is an **AI-powered screenshot analysis tool** that captures screenshots of web pages and provides intelligent analysis using Google's Gemini AI model through the OpenRouter API.
+This extension now includes comprehensive Google Analytics 4 (GA4) tracking for all user interactions.
 
-### **Core Functionality**
+### Setup Instructions
 
-1. **Screenshot Capture**: Takes screenshots of the currently active browser tab
-2. **AI Analysis**: Sends captured screenshots to an AI service for detailed analysis
-3. **Custom Prompts**: Allows users to customize the analysis prompt for specific insights
-4. **Clipboard Integration**: Enables copying screenshots directly to clipboard
+1. **Update `analytics.js`**: Open [`browser_extension/analytics.js`](browser_extension/analytics.js:2) and replace `G-XXXXXXXXXX` with your actual GA4 Measurement ID.
+2. **Update API Secret**: Replace `YOUR_API_SECRET` in [`browser_extension/analytics.js`](browser_extension/analytics.js:42) with your GA4 API secret.
 
-### **How It Works**
+### Tracked Events
 
-```mermaid
-graph TD
-    A[User clicks extension icon] --> B[Extension popup opens]
-    B --> C[User clicks "Take Screenshot and Analyze"]
-    C --> D[Capture visible tab screenshot]
-    D --> E[Display screenshot preview]
-    E --> F[Send to AI API for analysis]
-    F --> G[Display analysis results]
-    G --> H[User can modify prompt and re-analyze]
-```
+The following user interactions are tracked:
 
-### **Technical Architecture**
+#### Popup Page Events
+- **screenshot_analyze_click**: When the "Take Screenshot and Analyze" button is clicked
+- **screenshot_error**: When there's an error taking a screenshot (includes error message)
+- **prompt_submit**: When a new prompt is submitted (includes prompt length)
+- **copy_screenshot_click**: When the copy screenshot button is clicked
+- **copy_screenshot_success**: When screenshot is successfully copied to clipboard
+- **copy_screenshot_error**: When screenshot copy fails (includes error message)
+- **clear_screenshot_click**: When the clear screenshot button is clicked
 
-- **Frontend**: Chrome extension popup interface ([`popup.html`](browser_extension/popup.html), [`popup.js`](browser_extension/popup.js), [`popup.css`](browser_extension/popup.css))
-- **Backend API**: Next.js API route ([`route.ts`](frontend/src/app/api/analyze/route.ts)) that handles AI processing
-- **AI Service**: OpenRouter API with Google Gemini 2.5 Flash Lite model
-- **Configuration**: API endpoint configured at `https://www.analyse-it.dev/api/analyze`
+#### Options Page Events
+- **save_api_key_click**: When the "Save" button is clicked on the options page
+- **save_api_key_success**: When the API key is successfully saved
 
-### **Key Features**
+### Implementation Details
 
-1. **No API Key Required for Users**: The API key is managed server-side, making it easier for end users
-2. **Interactive Analysis**: After initial analysis, users can modify their prompt to get different insights from the same screenshot
-3. **Visual Feedback**: Shows a preview of the captured screenshot
-4. **Error Handling**: Comprehensive error handling for API failures and network issues
-5. **Cross-Origin Support**: CORS-enabled API for extension communication
+- Uses GA4's Measurement Protocol for server-side tracking
+- Generates and stores a unique client ID for each extension installation
+- Events are sent asynchronously without impacting user experience
+- Error handling prevents analytics failures from affecting core functionality
 
-### **User Flow**
+### Files Modified
 
-1. Click the extension icon in Chrome toolbar
-2. Click "Take Screenshot and Analyze" button
-3. Extension captures the current tab's visible area
-4. Screenshot is sent to the AI service for analysis
-5. Results appear in the popup with the screenshot preview
-6. Users can edit the prompt and submit again for different analysis
-
-### **Permissions Required**
-
-- `activeTab`: To capture screenshots of the current tab
-- `storage`: To store user preferences (though API key storage appears to be server-side now)
-
-The extension essentially provides a seamless way to get AI-powered insights about any web content you're viewing, without needing to manually save screenshots or manage API credentials.
+- [`browser_extension/analytics.js`](browser_extension/analytics.js): New file containing GA4 tracking logic
+- [`browser_extension/popup.js`](browser_extension/popup.js): Added event tracking calls
+- [`browser_extension/options.js`](browser_extension/options.js): Added event tracking calls
+- [`browser_extension/popup.html`](browser_extension/popup.html): Added analytics.js script
+- [`browser_extension/options.html`](browser_extension/options.html): Added analytics.js script
