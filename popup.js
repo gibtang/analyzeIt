@@ -14,6 +14,8 @@ const clearButton = document.getElementById('clearButton'); // Get the clear but
 
 let currentScreenshotDataUrl = ''; // To store the screenshot data for re-use
 
+const initialPrompt = 'Analyze this and provide a detailed description of the content';
+
 // Function to save state to Chrome storage
 function saveState() {
   const state = {
@@ -34,7 +36,7 @@ function restoreState() {
       screenshotPreview.src = state.screenshotDataUrl;
       screenshotPreview.classList.remove('hidden');
       resultDiv.textContent = state.analysisResult || '';
-      promptText.value = state.promptText || 'Analyze this screenshot and provide a detailed description.';
+      promptText.value = state.promptText || initialPrompt;
       promptContainer.classList.remove('hidden');
     }
   });
@@ -116,7 +118,6 @@ restoreState();
       screenshotPreview.src = currentScreenshotDataUrl;
       screenshotPreview.classList.remove('hidden');
 
-      const initialPrompt = 'Analyze this screenshot and provide a detailed description.';
       promptText.value = initialPrompt; // Set initial prompt in textarea
 
       await callAnalyzeApi(initialPrompt, currentScreenshotDataUrl);
