@@ -7,6 +7,7 @@
   // Replace with your actual GA4 Measurement ID
   //const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
   const GA_MEASUREMENT_ID = 'G-500729746';
+  const GA_URL = `https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=XXX-XXX`;
 
   // Function to generate a unique client ID for the extension
   function generateClientId() {
@@ -47,7 +48,7 @@
       }]
     };
 
-    fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=YOUR_API_SECRET`, {
+    fetch(GA_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -75,7 +76,7 @@
       }]
     };
 
-    fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=YOUR_API_SECRET`, {
+    fetch(GA_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

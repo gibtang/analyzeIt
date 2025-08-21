@@ -4,6 +4,7 @@
   "description": "Analyzes screenshots of the active tab using AI. No AI API needed. ",
   "manifest_version": 3,
   "permissions": ["activeTab", "storage"],
+  "host_permissions": ["https://www.google-analytics.com/*"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
