@@ -11,6 +11,8 @@ const promptError = document.getElementById('promptError');
 const copyButton = document.getElementById('copyButton'); // Get the copy button
 const copySuccessMessage = document.getElementById('copySuccessMessage'); // Get the success message element
 const clearButton = document.getElementById('clearButton'); // Get the clear button
+const copyResultButton = document.getElementById('copyResultButton'); // Get the new copy result text button
+const copyResultSuccessMessage = document.getElementById('copyResultSuccessMessage'); // Get the new success message element for result text
 
 let currentScreenshotDataUrl = ''; // To store the screenshot data for re-use
 
@@ -247,5 +249,42 @@ restoreState();
     
     // Clear stored state from Chrome storage
     chrome.storage.local.remove('popupState');
+  });
+
+  // Add event listener for the new copy result text button
+  copyResultButton.addEventListener('click', async () => {
+    const textToCopy = resultDiv.textContent;
+    if (!textToCopy) {
+      copyResultSuccessMessage.textContent = 'No result text to copy.';
+      copyResultSuccessMessage.style.color = 'red';
+      copyResultSuccessMessage.classList.remove('hidden');
+      setTimeout(() => {
+        copyResultSuccessMessage.classList.add('hidden');
+      }, 3000);
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+
+      // Show success message
+      copyResultSuccessMessage.textContent = 'Copied result text to clipboard!';
+      copyResultSuccessMessage.style.color = 'green';
+      copyResultSuccessMessage.classList.remove('hidden');
+
+      // Hide the success message after a few seconds
+      setTimeout(() => {
+        copyResultSuccessMessage.classList.add('hidden');
+      }, 3000);
+
+    } catch (error) {
+      console.error('Error copying result text:', error);
+      copyResultSuccessMessage.textContent = 'Failed to copy.';
+      copyResultSuccessMessage.style.color = 'red';
+      copyResultSuccessMessage.classList.remove('hidden');
+      setTimeout(() => {
+        copyResultSuccessMessage.classList.add('hidden');
+      }, 3000);
+    }
   });
 });
